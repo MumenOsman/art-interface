@@ -1,12 +1,13 @@
 :root {
-    --bg-color: #0f172a;
-    --card-bg: #1e293b;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --accent-color: #38bdf8;
-    --accent-hover: #0ea5e9;
-    --border-color: #334155;
-    --font-main: 'Outfit', sans-serif;
+    --bg-color: #282828;
+    --card-bg: #32302f;
+    --text-primary: #ebdbb2;
+    --text-secondary: #a89984;
+    --accent-color: #fe8019;
+    --accent-hover: #d65d0e;
+    --border-color: #928374;
+    --font-headers: 'Fira Code', 'JetBrains Mono', monospace;
+    --font-body: 'Inter', sans-serif;
     --font-mono: 'Space Mono', monospace;
 }
 
@@ -17,7 +18,7 @@
 }
 
 body {
-    font-family: var(--font-main);
+    font-family: var(--font-body);
     background-color: var(--bg-color);
     color: var(--text-primary);
     line-height: 1.6;
@@ -38,14 +39,27 @@ header {
     animation: fadeInDown 0.8s ease-out;
 }
 
-h1 {
-    font-size: 3rem;
+.ascii-title {
+    font-family: var(--font-headers);
+    font-size: 0.7rem;
+    line-height: 1.2;
     font-weight: 600;
     background: linear-gradient(135deg, #fff 0%, var(--accent-color) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    color: transparent;
     margin-bottom: 0.5rem;
+    white-space: pre;
+    overflow-x: auto;
+    text-align: center;
+    display: inline-block;
+}
+
+@media (min-width: 600px) {
+    .ascii-title {
+        font-size: 1rem;
+    }
 }
 
 .subtitle {
@@ -56,8 +70,7 @@ h1 {
 .art-form {
     background-color: var(--card-bg);
     padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 4px;
     border: 1px solid var(--border-color);
     margin-bottom: 2rem;
     animation: fadeInUp 0.8s ease-out 0.2s backwards;
@@ -78,19 +91,18 @@ textarea {
     width: 100%;
     background-color: var(--bg-color);
     border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
+    border-radius: 4px;
     padding: 1rem;
     color: var(--text-primary);
     font-family: var(--font-mono);
     font-size: 1rem;
     resize: vertical;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.3s;
 }
 
 textarea:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
 }
 
 .controls {
@@ -148,7 +160,7 @@ textarea:focus {
     color: var(--bg-color);
     border: none;
     padding: 0.75rem 2rem;
-    border-radius: 0.5rem;
+    border-radius: 4px;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
@@ -167,7 +179,7 @@ textarea:focus {
 .error-section {
     background-color: var(--card-bg);
     padding: 2rem;
-    border-radius: 1rem;
+    border-radius: 4px;
     border: 1px solid var(--border-color);
     animation: fadeInUp 0.8s ease-out 0.4s backwards;
 }
@@ -180,28 +192,32 @@ textarea:focus {
 }
 
 .result-header h2 {
+    font-family: var(--font-headers);
     font-size: 1.5rem;
     font-weight: 600;
+    color: var(--text-secondary);
 }
 
 .status-badge {
     padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
+    border-radius: 4px;
     font-size: 0.875rem;
     font-weight: 600;
-    background-color: rgba(56, 189, 248, 0.1);
-    color: var(--accent-color);
+    background-color: rgba(184, 187, 38, 0.1);
+    color: #b8bb26;
+    border: 1px solid rgba(184, 187, 38, 0.3);
 }
 
 .status-badge.error {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    background-color: rgba(251, 73, 52, 0.1);
+    color: #fb4934;
+    border-color: rgba(251, 73, 52, 0.3);
 }
 
 .result-content {
     background-color: var(--bg-color);
     padding: 1.5rem;
-    border-radius: 0.5rem;
+    border-radius: 4px;
     overflow-x: auto;
     border: 1px solid var(--border-color);
 }
@@ -213,7 +229,7 @@ pre {
 }
 
 .error-message {
-    color: #ef4444;
+    color: #fb4934;
 }
 
 @keyframes fadeInDown {
@@ -238,4 +254,38 @@ pre {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.copy-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: 0.8;
+    border: 1px solid var(--border-color);
+}
+
+.copy-btn:hover {
+    background-color: var(--bg-color);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    color: var(--accent-color);
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.copy-btn svg {
+    width: 1rem;
+    height: 1rem;
+    stroke: currentColor;
+    fill: none;
 }

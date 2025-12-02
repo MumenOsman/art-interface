@@ -1,37 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Art Decoder Interface</title>
+    <title>ASCII koodari</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Space+Mono&display=swap"
+        rel="stylesheet">
+    <!-- Added version query param to force browser cache refresh -->
+    <link rel="stylesheet" href="/static/style.css?v=2">
 </head>
+
 <body>
     <div class="container">
         <header>
-            <h1>Art Decoder</h1>
-            <p class="subtitle">Transform text into art and back again.</p>
+            <pre class="ascii-title">
+    _    ____   ____ ___ ___   _                     _            _ 
+   / \  / ___| / ___|_ _|_ _| | | __ ___   ___   __| | __ _ _ __(_)
+  / _ \ \___ \| |    | | | |  | |/ // _ \ / _ \ / _` |/ _` | '__| |
+ / ___ \ ___) | |___ | | | |  |   <| (_) | (_) | (_| | (_| | |  | |
+/_/   \_\____/ \____|___|___| |_|\_\\___/ \___/ \__,_|\__,_|_|  |_|
+            </pre>
+
         </header>
 
         <main>
             <form action="/decoder" method="POST" class="art-form">
                 <div class="input-group">
-                    <label for="text">Input Text</label>
-                    <textarea id="text" name="text" rows="6" placeholder="Enter your text here..." required>{{.Input}}</textarea>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label for="text" style="margin-bottom: 0;">Input Text</label>
+                        <select id="template-selector"
+                            style="padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-primary); font-family: var(--font-main);">
+                            <option value="">Choose a Template...</option>
+                            {{range .Templates}}
+                            <option value="{{.Value}}">{{.Name}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                    <textarea id="text" name="text" rows="6" placeholder="Enter your text here..."
+                        required>{{.Input}}</textarea>
                 </div>
 
                 <div class="controls">
                     <div class="mode-selector">
                         <label class="radio-label">
-                            <input type="radio" name="mode" value="encode" {{if eq .Mode "encode"}}checked{{end}} {{if not .Mode}}checked{{end}}>
+                            <input type="radio" name="mode" value="encode" {{if eq .Mode "encode" }}checked{{end}} {{if
+                                not .Mode}}checked{{end}}>
                             <span class="radio-custom"></span>
                             Encode
                         </label>
                         <label class="radio-label">
-                            <input type="radio" name="mode" value="decode" {{if eq .Mode "decode"}}checked{{end}}>
+                            <input type="radio" name="mode" value="decode" {{if eq .Mode "decode" }}checked{{end}}>
                             <span class="radio-custom"></span>
                             Decode
                         </label>
@@ -43,7 +65,18 @@
             {{if .Result}}
             <section class="result-section">
                 <div class="result-header">
-                    <h2>Result</h2>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h2>Result</h2>
+                        <button class="copy-btn" id="copyBtn" title="Copy to clipboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            Copy
+                        </button>
+                    </div>
                     <span class="status-badge {{.StatusClass}}">HTTP {{.StatusCode}}</span>
                 </div>
                 <div class="result-content">
@@ -51,10 +84,10 @@
                 </div>
             </section>
             {{end}}
-            
+
             {{if .Error}}
             <section class="error-section">
-                 <div class="result-header">
+                <div class="result-header">
                     <h2>Error</h2>
                     <span class="status-badge error">HTTP {{.StatusCode}}</span>
                 </div>
@@ -63,5 +96,37 @@
             {{end}}
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const templateSelector = document.getElementById('template-selector');
+            const textArea = document.getElementById('text');
+
+            if (templateSelector) {
+                templateSelector.addEventListener('change', function () {
+                    if (this.value) {
+                        textArea.value = this.value;
+                    }
+                });
+            }
+
+            // Copy functionality
+            const copyBtn = document.getElementById('copyBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function () {
+                    const resultText = document.querySelector('.result-content pre').innerText;
+                    navigator.clipboard.writeText(resultText).then(() => {
+                        const originalText = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalText;
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+                });
+            }
+        });
+    </script>
 </body>
+
 </html>

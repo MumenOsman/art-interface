@@ -1,15 +1,20 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 
 	h "interface/helpers" // h is the alias for the package helpers
 )
+
+type Template struct {
+	Name  string
+	Value string
+}
 
 type PageData struct {
 	Input       string
@@ -18,37 +23,89 @@ type PageData struct {
 	Mode        string
 	StatusCode  int
 	StatusClass string
+	Templates   []Template
+}
+
+var templates = []Template{
+	{
+		Name: "House",
+		Value: `
+   _
+  | |
+ _| |_
+|     |
+|_____|
+`,
+	},
+	{
+		Name: "Hello",
+		Value: `
+ _   _      _ _       
+| | | |    | | |      
+| |_| | ___| | | ___  
+|  _  |/ _ \ | |/ _ \ 
+| | | |  __/ | | (_) |
+\_| |_/\___|_|_|\___/ 
+`,
+	},
+	{
+		Name: "Box",
+		Value: `
++-------+
+|       |
+|       |
++-------+
+`,
+	},
+	{
+		Name: "Cat",
+		Value: `
+      |\      _,,,---,,_
+ZZZzz /,` + "`" + `.-'` + "`" + `'    -.  ;-;;,_
+     |,4-  ) )-,_. ,\ (  ` + "`" + `'-'
+    '---''(_/--'  ` + "`" + `-'\_)
+`,
+	},
+	{
+		Name: "Dog",
+		Value: `
+  __      _
+o'')}____//
+ ` + "`" + `_/      )
+ (_(_/-(_/
+`,
+	},
+	{
+		Name: "Owl",
+		Value: `
+  ,_,
+ (O,O)
+ (   )
+ -"-"-
+`,
+	},
 }
 
 func main() {
-	args := os.Args[1:]
+	web := flag.Bool("web", false, "Start web server")
+	encode := flag.Bool("Encode", false, "Encode mode")
+	multi := flag.Bool("Multi", false, "Multi line mode")
+	flag.Parse()
 
-	if len(args) > 0 && args[0] == "--web" {
+	if *web {
 		startServer()
 		return
 	}
 
+	args := flag.Args()
 	if len(args) == 0 {
-		fmt.Println("Error")
+		fmt.Println("Error: No input provided")
 		return
 	}
 
-	isMulti := false
-	isEncode := false
-	var uInput string
-
-	for _, arg := range args { // the loop here goes through the range of args so with every round it checks the next argument, so in the case of multi encode it will still reads both
-		if arg == "--help" || arg == "-h" {
-			fmt.Println("Help message")
-			return
-		} else if arg == "--Encode" {
-			isEncode = true
-		} else if arg == "--Multi" {
-			isMulti = true
-		} else {
-			uInput = arg
-		}
-	}
+	uInput := strings.Join(args, " ")
+	isEncode := *encode
+	isMulti := *multi
 
 	if uInput == "" {
 		fmt.Println("Error")
@@ -95,7 +152,9 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	renderTemplate(w, PageData{})
+	renderTemplate(w, PageData{
+		Templates: templates,
+	})
 }
 
 func handleDecoder(w http.ResponseWriter, r *http.Request) {
@@ -120,11 +179,6 @@ func handleDecoder(w http.ResponseWriter, r *http.Request) {
 	var err error
 	isMulti := strings.Contains(text, "\n") || strings.Contains(text, "\\n")
 
-	// Basic handling of literal \n for single line inputs if they are typed that way
-	// But usually textarea sends actual newlines.
-	// The helpers seem to handle "Multi" vs "Single".
-	// Let's assume if there's a newline char, it's multi.
-
 	if mode == "encode" {
 		if isMulti {
 			output, err = h.MultiLineEncode(text)
@@ -141,8 +195,9 @@ func handleDecoder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := PageData{
-		Input: text,
-		Mode:  mode,
+		Input:     text,
+		Mode:      mode,
+		Templates: templates,
 	}
 
 	if err != nil {
