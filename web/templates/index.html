@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Decoder Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Art Decoder</h1>
+            <p class="subtitle">Transform text into art and back again.</p>
+        </header>
+
+        <main>
+            <form action="/decoder" method="POST" class="art-form">
+                <div class="input-group">
+                    <label for="text">Input Text</label>
+                    <textarea id="text" name="text" rows="6" placeholder="Enter your text here..." required>{{.Input}}</textarea>
+                </div>
+
+                <div class="controls">
+                    <div class="mode-selector">
+                        <label class="radio-label">
+                            <input type="radio" name="mode" value="encode" {{if eq .Mode "encode"}}checked{{end}} {{if not .Mode}}checked{{end}}>
+                            <span class="radio-custom"></span>
+                            Encode
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="mode" value="decode" {{if eq .Mode "decode"}}checked{{end}}>
+                            <span class="radio-custom"></span>
+                            Decode
+                        </label>
+                    </div>
+                    <button type="submit" class="generate-btn">Generate</button>
+                </div>
+            </form>
+
+            {{if .Result}}
+            <section class="result-section">
+                <div class="result-header">
+                    <h2>Result</h2>
+                    <span class="status-badge {{.StatusClass}}">HTTP {{.StatusCode}}</span>
+                </div>
+                <div class="result-content">
+                    <pre>{{.Result}}</pre>
+                </div>
+            </section>
+            {{end}}
+            
+            {{if .Error}}
+            <section class="error-section">
+                 <div class="result-header">
+                    <h2>Error</h2>
+                    <span class="status-badge error">HTTP {{.StatusCode}}</span>
+                </div>
+                <p class="error-message">{{.Error}}</p>
+            </section>
+            {{end}}
+        </main>
+    </div>
+</body>
+</html>
