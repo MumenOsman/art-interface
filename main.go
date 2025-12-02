@@ -185,6 +185,8 @@ func handleDecoder(w http.ResponseWriter, r *http.Request) {
 		} else {
 			output, err = h.SingleLineEncode(text)
 		}
+	} else if mode == "art" {
+		output, err = h.GenerateASCII(text)
 	} else {
 		// Decode
 		if isMulti {
