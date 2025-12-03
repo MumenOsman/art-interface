@@ -50,9 +50,15 @@ func SingleLineEncode(artString string) (string, error) {
 		if maxCount > 1 {
 			// Found a repeatable pattern: compress it
 			// Ensure the pattern doesn't contain the reserved characters '[' and ']'
-			if strings.ContainsAny(bestPattern, "[]") {
+			// Ensure the pattern doesn't contain the reserved character ']'
+			// We can allow '[' in the pattern.
+			if strings.Contains(bestPattern, "]") {
 				// Fallback to single character if pattern contains reserved chars
-				encoded.WriteByte(artString[i])
+				if artString[i] == '[' {
+					encoded.WriteString("[1 []")
+				} else {
+					encoded.WriteByte(artString[i])
+				}
 				i++
 			} else {
 				encoded.WriteString(fmt.Sprintf("[%d %s]", maxCount, bestPattern))
@@ -61,7 +67,11 @@ func SingleLineEncode(artString string) (string, error) {
 		} else {
 			// No significant compression found: append the single character
 			// We check for reserved characters, but they should be printed as-is
-			encoded.WriteByte(artString[i])
+			if artString[i] == '[' {
+				encoded.WriteString("[1 []")
+			} else {
+				encoded.WriteByte(artString[i])
+			}
 			i++
 		}
 	}
