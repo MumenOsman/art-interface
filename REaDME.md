@@ -1,13 +1,15 @@
-# Art Decoder Interface
+# Art Interface & RLE Encoder
 
-Welcome to the Art Decoder Interface! This tool allows you to encode and decode ASCII art using a beautiful web interface or the command line.
+A versatile tool designed to generate ASCII art and perform custom Run-Length Encoding (RLE) compression and decompression. Whether you prefer a visual web interface or a command-line tool, this project has you covered.
 
 ## Features
 
-- **Web Interface**: A modern, responsive web UI to interact with the encoder/decoder.
-- **CLI Support**: Retains the original command-line functionality.
-- **Multi-line Support**: Handle complex ASCII art with ease.
-- **Real-time Feedback**: See the results instantly.
+- **ASCII Art Generation**: Convert standard text into stylish ASCII art (Web Interface).
+- **Custom RLE Compression**: Encode strings and ASCII art into a compressed format `[Count Pattern]` to save space.
+- **Decompression**: Decode compressed strings back to their original form.
+- **Dual Interface**:
+    - **Web UI**: A modern, responsive dark-mode interface for easy interaction.
+    - **CLI**: A robust command-line tool for quick scripting and processing.
 
 ## Getting Started
 
@@ -15,40 +17,51 @@ Welcome to the Art Decoder Interface! This tool allows you to encode and decode 
 
 - Go 1.16 or higher
 
-### Running the Web Interface
+### 1. Web Interface
 
-To start the web server, run the following command from the project root:
+The web interface provides the complete experience, allowing you to generate art, encode, and decode with a click.
 
+**Start the server:**
 ```bash
 go run . --web
 ```
 
-Then, open your browser and navigate to:
+**Open in browser:**
+Navigate to [http://localhost:8080](http://localhost:8080).
 
-[http://localhost:8080](http://localhost:8080)
+**Web Modes:**
+- **Art**: Type text and generate ASCII art.
+- **Encode**: Paste text/art to compress it.
+- **Decode**: Paste a compressed string to restore it.
 
-### Using the CLI
+### 2. Command Line Interface (CLI)
 
-You can still use the command line interface as before:
+Use the tool directly from your terminal for encoding and decoding tasks.
 
-**Encode:**
+**Encode a string:**
+Use the `--Encode` flag.
 ```bash
-go run . --Encode "Hello"
+go run . --Encode "Hello World"
 ```
+*Output: `He[2 l]o World` (Compressed representation)*
 
-**Decode:**
+**Decode a string:**
+Simply pass the encoded string as an argument.
 ```bash
-go run . "EncodedString"
+go run . "He[2 l]o"
 ```
+*Output: `Hello`*
 
-## Usage
+**Multi-line Support:**
+Add the `--Multi` flag for processing multi-line strings (useful for large ASCII art blocks).
 
-1.  **Enter Text**: Type or paste your text into the input area.
-2.  **Select Mode**: Choose "Encode" to turn text into art, or "Decode" to revert it.
-3.  **Generate**: Click the button to see the magic happen!
+## Algorithm
+
+The project uses a custom Run-Length Encoding (RLE) algorithm:
+- **Format**: `[Count Pattern]` for repetitions > 1. Single characters are left as-is.
+- **Example**: `AAAABBB` becomes `[4 A][3 B]`
+- **Efficiency**: It intelligently looks for repeating patterns (not just single characters) to maximize compression.
 
 ## Design
 
-The interface is designed with a focus on aesthetics, featuring a dark mode theme, smooth animations, and a clean layout to inspire creativity.
-
-Enjoy creating!
+The web interface features a "Retro Coding" aesthetic with a Gruvbox-inspired dark theme, ensuring a comfortable and stylish user experience.
