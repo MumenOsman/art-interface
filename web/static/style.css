@@ -9,6 +9,7 @@
     --font-headers: 'Fira Code', 'JetBrains Mono', monospace;
     --font-body: 'Inter', sans-serif;
     --font-mono: 'Space Mono', monospace;
+    --gruvbox-green: #b8bb26;
 }
 
 * {
@@ -44,11 +45,7 @@ header {
     font-size: 0.7rem;
     line-height: 1.2;
     font-weight: 600;
-    background: linear-gradient(135deg, #fff 0%, var(--accent-color) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+    color: var(--border-color);
     margin-bottom: 0.5rem;
     white-space: pre;
     overflow-x: auto;
@@ -239,11 +236,7 @@ header {
     font-size: 0.7rem;
     line-height: 1.2;
     font-weight: 600;
-    background: linear-gradient(135deg, #fff 0%, var(--accent-color) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+    color: var(--border-color);
     margin-bottom: 0.5rem;
     white-space: pre;
     overflow-x: auto;
