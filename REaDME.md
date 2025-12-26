@@ -65,3 +65,6 @@ The project uses a custom Run-Length Encoding (RLE) algorithm:
 ## Design
 
 The web interface features a "Retro Coding" aesthetic with a Gruvbox-inspired dark theme, ensuring a comfortable and stylish user experience.
+
+
+This is the final update
